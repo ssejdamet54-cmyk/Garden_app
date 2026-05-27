@@ -1,0 +1,1577 @@
+html {
+  width: 100%;
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+  touch-action: manipulation;
+}
+
+#root {
+  min-height: 100vh;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #eef6ef;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  color: #183323;
+}
+
+button {
+  font-family: inherit;
+}
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+  max-width: 520px;
+  margin: 0 auto;
+  background: #f8fbf7;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.topbar {
+  padding: 22px 18px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: #6b8b74;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 28px;
+  line-height: 1.1;
+}
+
+h2 {
+  margin-bottom: 8px;
+  font-size: 25px;
+}
+
+h3 {
+  margin-bottom: 6px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 18px;
+  background: #dff3df;
+  display: grid;
+  place-items: center;
+  font-size: 25px;
+  box-shadow: 0 12px 30px rgba(36, 91, 51, 0.12);
+}
+
+.content {
+  padding: 0 14px 140px;
+}
+
+.screen {
+  animation: fadeIn 0.18s ease-out;
+}
+
+.hero-card {
+  padding: 22px;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #225c36, #69a84f);
+  color: white;
+  box-shadow: 0 18px 42px rgba(34, 92, 54, 0.25);
+  overflow: hidden;
+}
+
+.hero-card .eyebrow {
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.hero-card p {
+  margin-bottom: 0;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.section-title {
+  margin: 22px 4px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-title h2,
+.section-title h3 {
+  margin-bottom: 0;
+}
+
+.list {
+  display: grid;
+  gap: 12px;
+}
+
+.plant-card,
+.care-card,
+.guide-card,
+.big-card,
+.photo-card {
+  background: white;
+  border: 1px solid rgba(32, 92, 51, 0.08);
+  box-shadow: 0 14px 35px rgba(25, 64, 38, 0.08);
+}
+
+.plant-card {
+  padding: 14px;
+  border-radius: 22px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.plant-icon {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  border-radius: 20px;
+  background: #eef8ee;
+  display: grid;
+  place-items: center;
+  font-size: 30px;
+}
+
+.plant-info {
+  min-width: 0;
+  flex: 1;
+}
+
+.plant-info h3 {
+  margin-bottom: 2px;
+  font-size: 17px;
+}
+
+.plant-info p {
+  margin-bottom: 8px;
+  color: #718377;
+  font-size: 13px;
+}
+
+.status {
+  display: inline-flex;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status.success {
+  background: #e4f7e8;
+  color: #23713a;
+}
+
+.status.normal {
+  background: #eef2ff;
+  color: #3650a3;
+}
+
+.status.warning {
+  background: #fff2d8;
+  color: #94600e;
+}
+
+.status.danger {
+  background: #ffe3e3;
+  color: #b12828;
+}
+
+.small-button,
+.primary-button {
+  border: 0;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.small-button {
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: #e7f5e8;
+  color: #216638;
+}
+
+.primary-button {
+  padding: 11px 14px;
+  border-radius: 16px;
+  background: #245c36;
+  color: white;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.big-card {
+  padding: 18px;
+  border-radius: 26px;
+}
+
+.big-icon {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 14px;
+  border-radius: 26px;
+  display: grid;
+  place-items: center;
+  background: #eef8ee;
+  font-size: 40px;
+}
+
+.big-card p {
+  color: #708177;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+.meta span {
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #f0f6ef;
+  color: #31583c;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.next-date {
+  margin-bottom: 0;
+  font-weight: 700;
+}
+
+.care-card {
+  padding: 16px;
+  border-radius: 24px;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.care-card p {
+  margin-bottom: 5px;
+  color: #62776a;
+}
+
+.muted {
+  color: #8b9c91 !important;
+  font-size: 13px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.photo-card {
+  padding: 14px;
+  border-radius: 24px;
+}
+
+.photo-placeholder {
+  height: 180px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #e7f7e9, #d4efdc);
+  display: grid;
+  place-items: center;
+  font-size: 64px;
+  margin-bottom: 12px;
+}
+
+.photo-card p {
+  color: #718377;
+}
+
+.guide-list {
+  display: grid;
+  gap: 12px;
+}
+
+.guide-card {
+  padding: 17px;
+  border-radius: 24px;
+}
+
+.guide-card p {
+  margin-bottom: 0;
+  color: #607468;
+  line-height: 1.5;
+}
+
+.bottom-nav {
+  position: fixed;
+  left: 50%;
+  bottom: 12px;
+  transform: translateX(-50%);
+  width: calc(100% - 24px);
+  max-width: 496px;
+  height: 74px;
+  padding: 8px;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(18px);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  box-shadow: 0 14px 45px rgba(22, 56, 34, 0.18);
+  border: 1px solid rgba(34, 92, 54, 0.08);
+}
+
+.bottom-nav button {
+  border: 0;
+  background: transparent;
+  border-radius: 20px;
+  color: #789281;
+  display: grid;
+  place-items: center;
+  gap: 2px;
+  cursor: pointer;
+  font-size: 19px;
+}
+
+.bottom-nav button span {
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.bottom-nav button.active {
+  background: #e8f6e9;
+  color: #245c36;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  background: rgba(13, 38, 23, 0.45);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 14px;
+}
+
+.modal {
+  width: 100%;
+  max-width: 496px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 18px;
+  box-shadow: 0 24px 70px rgba(10, 35, 20, 0.28);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 15px;
+  background: #edf6ee;
+  color: #245c36;
+  font-size: 20px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 12px;
+}
+
+.field span {
+  color: #425c4a;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1px solid #d9e8dc;
+  border-radius: 16px;
+  background: #f8fbf7;
+  color: #183323;
+  padding: 13px 14px;
+  font: inherit;
+  outline: none;
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: #69a84f;
+  box-shadow: 0 0 0 4px rgba(105, 168, 79, 0.14);
+}
+
+.submit-button {
+  width: 100%;
+  border: 0;
+  border-radius: 18px;
+  background: #245c36;
+  color: #ffffff;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.icon-picker {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.icon-choice {
+  height: 52px;
+  border: 1px solid #d9e8dc;
+  border-radius: 18px;
+  background: #f8fbf7;
+  font-size: 26px;
+  cursor: pointer;
+}
+
+.icon-choice.active {
+  background: #dff3df;
+  border-color: #69a84f;
+  box-shadow: 0 0 0 4px rgba(105, 168, 79, 0.14);
+}
+.card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.secondary-button,
+.danger-button {
+  border: 0;
+  border-radius: 16px;
+  padding: 11px 12px;
+  font-size: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.secondary-button {
+  background: #eef6ef;
+  color: #245c36;
+}
+
+.danger-button {
+  background: #ffe3e3;
+  color: #b12828;
+}
+.photo-upload {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.photo-preview {
+  width: 100%;
+  height: 190px;
+  border-radius: 24px;
+  background: #eef8ee;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  font-size: 58px;
+  border: 1px solid #d9e8dc;
+}
+
+.photo-preview img,
+.plant-icon img,
+.big-icon img,
+.photo-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-button {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  border-radius: 18px;
+  background: #e7f5e8;
+  color: #216638;
+  padding: 13px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.photo-button input {
+  display: none;
+}
+
+.remove-photo-button {
+  border: 0;
+  border-radius: 16px;
+  background: #ffe3e3;
+  color: #b12828;
+  padding: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.big-card {
+  overflow: hidden;
+}
+
+.big-card .big-icon {
+  width: 100%;
+  height: 190px;
+  margin-bottom: 16px;
+  border-radius: 24px;
+  background: #eef8ee;
+  overflow: hidden;
+  font-size: 48px;
+}
+
+.big-card .big-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.plant-card .plant-icon {
+  overflow: hidden;
+}
+
+.plant-card .plant-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-placeholder {
+  height: 260px;
+  overflow: hidden;
+  position: relative;
+}
+
+.photo-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-card h3,
+.photo-card p {
+  position: relative;
+  z-index: 2;
+}
+
+@media (max-width: 420px) {
+  .big-card .big-icon {
+    height: 170px;
+  }
+
+  .photo-placeholder {
+    height: 230px;
+  }
+}
+.photo-clickable {
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.photo-clickable img {
+  object-position: center center;
+}
+
+.photo-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(8, 24, 14, 0.88);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.photo-viewer img {
+  max-width: 100%;
+  max-height: 82vh;
+  border-radius: 24px;
+  object-fit: contain;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+}
+
+.photo-viewer-close {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #183323;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+  z-index: 51;
+}
+
+.big-card .big-icon img,
+.photo-placeholder img,
+.photo-preview img {
+  object-position: center center;
+}
+
+.photo-clickable {
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #eef8ee;
+}
+
+.photo-clickable img,
+.plant-icon img,
+.big-icon img,
+.photo-placeholder img,
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 72%;
+}
+
+.plant-icon.photo-clickable {
+  width: 56px;
+  height: 56px;
+  border-radius: 20px;
+}
+
+.big-card .big-icon.photo-clickable {
+  width: 100%;
+  height: 190px;
+  margin-bottom: 16px;
+  border-radius: 24px;
+}
+
+.photo-placeholder.photo-clickable {
+  width: 100%;
+  height: 260px;
+  border-radius: 22px;
+}
+
+.photo-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(8, 24, 14, 0.92);
+  display: grid;
+  place-items: center;
+  padding: 18px;
+}
+
+.photo-viewer img {
+  max-width: 100%;
+  max-height: 82vh;
+  object-fit: contain;
+  object-position: center center;
+  border-radius: 24px;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+}
+
+.photo-viewer-close {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 10000;
+  width: 46px;
+  height: 46px;
+  border: 0;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  color: #183323;
+  font-size: 22px;
+  font-weight: 900;
+  cursor: pointer;
+}
+.plant-icon img,
+.big-icon img,
+.photo-placeholder img,
+.photo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35% !important;
+}
+
+.photo-viewer img {
+  object-fit: contain;
+  object-position: center center !important;
+}
+.watering-history {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.watering-history span {
+  color: #425c4a;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.watering-history small {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #eef6ef;
+  color: #245c36;
+  font-size: 11px;
+  font-weight: 800;
+}
+.season-advice {
+  margin-top: 10px;
+  padding: 11px 12px;
+  border-radius: 16px;
+  background: #f0f6ef;
+  display: grid;
+  gap: 4px;
+}
+
+.season-advice strong {
+  color: #245c36;
+  font-size: 13px;
+}
+
+.season-advice span {
+  color: #607468;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.care-card {
+  align-items: flex-start;
+}
+
+.care-main {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.care-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.care-title span {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.care-title h3 {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.15;
+}
+
+.care-main p {
+  margin: 0;
+}
+
+.care-water-button {
+  flex: 0 0 auto;
+  margin-top: 4px;
+}
+
+.season-advice {
+  margin-top: 8px;
+  padding: 11px 12px;
+  border-radius: 16px;
+  background: #f0f6ef;
+  display: grid;
+  gap: 4px;
+}
+
+.season-advice strong {
+  color: #245c36;
+  font-size: 13px;
+}
+
+.season-advice span {
+  color: #607468;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.watering-history {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.watering-history span {
+  color: #425c4a;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.watering-history small {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #eef6ef;
+  color: #245c36;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+@media (max-width: 420px) {
+  .care-card {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .care-water-button {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
+.weather-card {
+  margin: 0 0 14px;
+  padding: 16px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(32, 92, 51, 0.08);
+  box-shadow: 0 14px 35px rgba(25, 64, 38, 0.08);
+}
+
+.weather-card h3 {
+  margin-bottom: 8px;
+}
+
+.weather-card p {
+  margin-bottom: 4px;
+  color: #607468;
+  font-weight: 700;
+}
+
+.weather-error {
+  margin-bottom: 14px;
+  padding: 13px 14px;
+  border-radius: 18px;
+  background: #ffe3e3;
+  color: #b12828;
+  font-weight: 800;
+}
+
+.weather-advice {
+  margin-top: 8px;
+  padding: 11px 12px;
+  border-radius: 16px;
+  background: #eef2ff;
+  display: grid;
+  gap: 4px;
+}
+
+.weather-advice strong {
+  color: #3650a3;
+  font-size: 13px;
+}
+
+.weather-advice span {
+  color: #607468;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.care-guide-details {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.care-guide-details div {
+  padding: 12px;
+  border-radius: 16px;
+  background: #f8fbf7;
+}
+
+.care-guide-details strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #245c36;
+  font-size: 13px;
+}
+
+.care-guide-details p {
+  margin: 0;
+  color: #607468;
+  line-height: 1.45;
+}
+.guide-plant-button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.guide-plant-button span {
+  color: #183323;
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.guide-plant-button strong {
+  flex: 0 0 auto;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: #eef6ef;
+  color: #245c36;
+  font-size: 12px;
+  font-weight: 900;
+}
+.companion-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.companion-card {
+  padding: 14px;
+  border-radius: 18px;
+  background: #f8fbf7;
+  display: grid;
+  gap: 10px;
+}
+
+.companion-card h4 {
+  margin: 0;
+  color: #183323;
+  font-size: 18px;
+}
+
+.companion-section {
+  padding: 11px 12px;
+  border-radius: 15px;
+  display: grid;
+  gap: 4px;
+}
+
+.companion-section strong {
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.companion-section p {
+  margin: 0;
+  line-height: 1.4;
+}
+
+.companion-section.good {
+  background: #e8f6e9;
+  color: #245c36;
+}
+
+.companion-section.bad {
+  background: #ffe8e8;
+  color: #9f2424;
+}
+
+.companion-note {
+  margin: 0;
+  color: #607468;
+  line-height: 1.45;
+}
+.category-filter {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 4px 14px;
+  margin-bottom: 4px;
+  scrollbar-width: none;
+}
+
+.category-filter::-webkit-scrollbar {
+  display: none;
+}
+
+.category-filter button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 999px;
+  padding: 9px 12px;
+  background: #eef6ef;
+  color: #245c36;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.category-filter button.active {
+  background: #245c36;
+  color: #ffffff;
+}
+.weather-panel {
+  margin-bottom: 14px;
+  padding: 16px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(32, 92, 51, 0.08);
+  box-shadow: 0 14px 35px rgba(25, 64, 38, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.category-filter button small {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(36, 92, 54, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.category-filter button.active small {
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+.weather-panel h3 {
+  margin-bottom: 5px;
+  color: #183323;
+}
+
+.weather-panel p {
+  margin: 0;
+  color: #607468;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.weather-card {
+  margin: 0 0 14px;
+  padding: 16px;
+  border-radius: 24px;
+  background: #ffffff;
+  border: 1px solid rgba(32, 92, 51, 0.08);
+  box-shadow: 0 14px 35px rgba(25, 64, 38, 0.08);
+}
+
+.weather-card h3 {
+  margin-bottom: 8px;
+}
+
+.weather-card p {
+  margin-bottom: 4px;
+  color: #607468;
+  font-weight: 700;
+}
+
+.weather-error {
+  margin-bottom: 14px;
+  padding: 13px 14px;
+  border-radius: 18px;
+  background: #ffe3e3;
+  color: #b12828;
+  font-weight: 800;
+}
+
+.weather-advice {
+  margin-top: 8px;
+  padding: 11px 12px;
+  border-radius: 16px;
+  background: #eef2ff;
+  display: grid;
+  gap: 4px;
+}
+
+.weather-advice strong {
+  color: #3650a3;
+  font-size: 13px;
+}
+
+.weather-advice span {
+  color: #607468;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+@media (max-width: 420px) {
+  .weather-panel {
+    display: grid;
+  }
+
+  .weather-panel .primary-button {
+    width: 100%;
+  }
+}
+.auto-fill-button {
+  width: 100%;
+  border: 0;
+  border-radius: 18px;
+  background: #eef6ef;
+  color: #245c36;
+  padding: 13px 14px;
+  margin: -2px 0 12px;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.auto-fill-button:active {
+  transform: scale(0.99);
+}
+.quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 11px;
+  margin: 16px 0 4px;
+}
+
+.quick-actions button {
+  border: 0;
+  border-radius: 22px;
+  background: #ffffff;
+  color: #245c36;
+  padding: 14px 8px;
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  font-weight: 900;
+  box-shadow: 0 14px 35px rgba(25, 64, 38, 0.08);
+  cursor: pointer;
+}
+
+.quick-actions span {
+  font-size: 24px;
+}
+
+.task-card {
+  padding: 14px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(32, 92, 51, 0.08);
+  box-shadow: 0 14px 35px rgba(25, 64, 38, 0.08);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.task-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 20px;
+  background: #eef8ee;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+  overflow: hidden;
+}
+
+.task-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.task-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-info h3 {
+  margin-bottom: 4px;
+  font-size: 17px;
+}
+
+.task-info p {
+  margin: 0;
+  color: #607468;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.task-place {
+  padding: 7px 9px;
+  border-radius: 999px;
+  background: #eef6ef;
+  color: #245c36;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.danger-task {
+  border-color: rgba(177, 40, 40, 0.18);
+  background: #fffafa;
+}
+
+.warning-task {
+  border-color: rgba(148, 96, 14, 0.18);
+  background: #fffdf7;
+}
+
+.empty-state {
+  padding: 18px;
+  border-radius: 22px;
+  background: #ffffff;
+  color: #607468;
+  text-align: center;
+  font-weight: 800;
+  box-shadow: 0 14px 35px rgba(25, 64, 38, 0.08);
+}
+.plant-cover-button {
+  width: 100%;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  display: block;
+}
+
+.plant-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.plant-card-header h3 {
+  margin-bottom: 4px;
+}
+
+.plant-card-header p {
+  margin: 0;
+  color: #708177;
+}
+
+.details-toggle {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 999px;
+  background: #eef6ef;
+  color: #245c36;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.plant-details {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+  animation: fadeIn 0.18s ease-out;
+}
+
+.detail-row {
+  padding: 11px 12px;
+  border-radius: 16px;
+  background: #f8fbf7;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.detail-row span,
+.details-history span,
+.plant-note-box span {
+  color: #607468;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.detail-row strong {
+  color: #183323;
+  font-size: 13px;
+  text-align: right;
+}
+
+.details-history {
+  padding: 11px 12px;
+  border-radius: 16px;
+  background: #f8fbf7;
+  display: grid;
+  gap: 8px;
+}
+
+.details-history div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.details-history small {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: #eef6ef;
+  color: #245c36;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.plant-note-box {
+  padding: 11px 12px;
+  border-radius: 16px;
+  background: #f8fbf7;
+  display: grid;
+  gap: 5px;
+}
+
+.plant-note-box p {
+  margin: 0;
+  color: #607468;
+  line-height: 1.45;
+}
+.search-box {
+  margin: 0 0 14px;
+  padding: 11px 12px;
+  border-radius: 20px;
+  background: #ffffff;
+  border: 1px solid rgba(32, 92, 51, 0.08);
+  box-shadow: 0 12px 28px rgba(25, 64, 38, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.search-box span {
+  font-size: 18px;
+}
+
+.search-box input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #183323;
+  font: inherit;
+  font-weight: 700;
+}
+
+.search-box input::placeholder {
+  color: #8b9c91;
+  font-weight: 600;
+}
+
+.search-box button {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 12px;
+  background: #eef6ef;
+  color: #245c36;
+  font-weight: 900;
+  cursor: pointer;
+}
+.watering-task-card {
+  min-height: auto;
+  padding: 14px;
+  align-items: center;
+}
+
+.watering-task-card .task-info {
+  text-align: left;
+}
+
+.watering-task-card .task-info h3 {
+  margin-bottom: 4px;
+}
+
+.watering-task-card .task-info p {
+  text-align: left;
+}
+
+.watering-task-card .task-place {
+  flex: 0 0 auto;
+}
+
+@media (max-width: 420px) {
+  .watering-task-card {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    align-items: center;
+  }
+
+  .watering-task-card .task-place {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .watering-task-card .small-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+.watering-section .list {
+  display: grid;
+  gap: 12px;
+}
+
+.watering-task-card {
+  width: 100%;
+  min-height: 0;
+  padding: 14px;
+  border-radius: 22px;
+  background: #ffffff;
+  border: 1px solid rgba(32, 92, 51, 0.08);
+  box-shadow: 0 14px 35px rgba(25, 64, 38, 0.08);
+  display: grid;
+  grid-template-columns: 54px 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.watering-task-card .task-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 20px;
+  background: #eef8ee;
+  display: grid;
+  place-items: center;
+  font-size: 28px;
+}
+
+.watering-task-card .task-info {
+  min-width: 0;
+  text-align: left;
+}
+
+.watering-task-card .task-info h3 {
+  margin: 0 0 4px;
+  color: #183323;
+  font-size: 18px;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.watering-task-card .task-info p {
+  margin: 0;
+  color: #607468;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.watering-task-card .task-place {
+  justify-self: end;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: #eef6ef;
+  color: #245c36;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .watering-task-card {
+    grid-template-columns: 54px 1fr;
+  }
+
+  .watering-task-card .task-place {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .watering-task-card .small-button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+.sync-status {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 18px;
+  background: #eef2ff;
+  color: #3650a3;
+  font-weight: 900;
+  text-align: center;
+}
+.sync-button {
+  width: 100%;
+  margin-bottom: 14px;
+  border: 0;
+  border-radius: 18px;
+  background: #245c36;
+  color: #ffffff;
+  padding: 13px 14px;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+}
