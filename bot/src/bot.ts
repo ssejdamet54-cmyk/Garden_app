@@ -792,6 +792,7 @@ const healthServer = http.createServer((request, response) => {
 healthServer.listen(port, () => {
   console.log(`Bot health server is running on port ${port}`);
 });
+
 bot
   .launch()
   .then(() => {
