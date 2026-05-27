@@ -48,7 +48,8 @@ type PlantPreset = {
   wateringEveryDays: number;
   notes: string;
 };
-const API_URL = "http://localhost:4000";
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://garden-backend-ekq8.onrender.com";
 const initialPlants: Plant[] = [
   {
     id: 1,
