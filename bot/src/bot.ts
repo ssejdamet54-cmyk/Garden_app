@@ -25,6 +25,8 @@ type BotSettings = {
 
 const botToken = process.env.BOT_TOKEN;
 const backendUrl = process.env.BACKEND_URL || "http://localhost:4000";
+const miniAppUrl =
+  process.env.MINI_APP_URL || "https://garden-mini-app.vercel.app/";
 const ownerChatId = process.env.OWNER_CHAT_ID;
 
 if (!botToken) {
@@ -287,9 +289,9 @@ bot.start(async (ctx) => {
         Markup.button.callback("✅ Полил", "WATER_ALL"),
       ],
       [
-        Markup.button.callback("⚙️ Настройки", "SETTINGS"),
-        Markup.button.callback("📱 О приложении", "APP_INFO"),
-      ],
+  Markup.button.callback("⚙️ Настройки", "SETTINGS"),
+  Markup.button.webApp("📱 Открыть приложение", miniAppUrl),
+],
       [
         Markup.button.callback("⏰ 09:00", "REMINDER_9"),
         Markup.button.callback("🌙 20:00", "REMINDER_20"),
