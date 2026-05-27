@@ -3,7 +3,7 @@ import { Telegraf, Markup } from "telegraf";
 import cron from "node-cron";
 import fs from "fs/promises";
 import path from "path";
-
+import http from "node:http";
 type Plant = {
   id: number;
   name: string;
@@ -764,7 +764,34 @@ bot.catch((error) => {
 readBotSettings().then((settings) => {
   console.log(`Watering reminder configured at ${getReminderTimeText(settings)}`);
 });
+const port = Number(process.env.PORT || 3000);
 
+const healthServer = http.createServer((request, response) => {
+  if (request.url === "/health") {
+    response.writeHead(200, {
+      "Content-Type": "application/json",
+    });
+
+    response.end(
+      JSON.stringify({
+        ok: true,
+        service: "garden-telegram-bot",
+      })
+    );
+
+    return;
+  }
+
+  response.writeHead(200, {
+    "Content-Type": "text/plain; charset=utf-8",
+  });
+
+  response.end("Garden Telegram bot is running.");
+});
+
+healthServer.listen(port, () => {
+  console.log(`Bot health server is running on port ${port}`);
+});
 bot
   .launch()
   .then(() => {
@@ -774,5 +801,12 @@ bot
     console.error("Failed to launch bot:", error);
   });
 
-process.once("SIGINT", () => bot.stop("SIGINT"));
-process.once("SIGTERM", () => bot.stop("SIGTERM"));
+process.once("SIGINT", () => {
+  bot.stop("SIGINT");
+  healthServer.close();
+});
+
+process.once("SIGTERM", () => {
+  bot.stop("SIGTERM");
+  healthServer.close();
+});
