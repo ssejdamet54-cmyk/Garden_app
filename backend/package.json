@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js"
+    "build": "echo Backend does not need build",
+    "start": "tsx src/server.ts"
   },
   "keywords": [],
   "author": "",
