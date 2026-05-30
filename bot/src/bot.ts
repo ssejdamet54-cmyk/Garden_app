@@ -28,8 +28,19 @@ const backendUrl = process.env.BACKEND_URL || "http://localhost:4000";
 const miniAppUrl =
   process.env.MINI_APP_URL || "https://garden-mini-app.vercel.app/";
 const ownerChatId = process.env.OWNER_CHAT_ID;
-function getOwnerId() {
+function getOwnerId(chatId?: number | string): string {
+  if (chatId !== undefined && chatId !== null) {
+    return String(chatId);
+  }
+
   return ownerChatId || "default";
+}
+
+function getBackendHeaders(chatId?: number | string): Record<string, string> {
+  return {
+    "Content-Type": "application/json",
+    "x-owner-id": getOwnerId(chatId),
+  };
 }
 
 if (!botToken) {
@@ -121,16 +132,9 @@ async function checkBackendHealth() {
     return false;
   }
 }
-function getBackendHeaders() {
-  return {
-    "Content-Type": "application/json",
-    "x-owner-id": getOwnerId(),
-  };
-}
-async function getPlants(): Promise<Plant[]> {
-  const response = await 
-  fetch(`${backendUrl}/plants`, {
-    headers: getBackendHeaders(),
+async function getPlants(chatId?: number | string): Promise<Plant[]> {
+  const response = await fetch(`${backendUrl}/plants`, {
+    headers: getBackendHeaders(chatId),
   });
 
   if (!response.ok) {
@@ -214,7 +218,7 @@ function getAllWateringButtons(plants: Plant[]) {
 }
 
 async function sendWateringListMessage(ctx: any, onlyDue: boolean) {
-  const plants = await getPlants();
+  const plants = await getPlants(ctx.chat?.id);
   const filteredPlants = onlyDue
     ? plants.filter((plant) => getDaysUntilWatering(plant) <= 0)
     : plants;
@@ -252,7 +256,7 @@ async function sendDailyWateringReminder() {
   }
 
   try {
-    const plants = await getPlants();
+const plants = await getPlants();
     const importantPlants = plants.filter(
       (plant) => getDaysUntilWatering(plant) <= 0
     );
@@ -337,7 +341,7 @@ bot.command("help", async (ctx) => {
 
 bot.command("plants", async (ctx) => {
   try {
-    const plants = await getPlants();
+ const plants = await getPlants(ctx.chat?.id);
     await ctx.reply(`🌿 Твои растения:\n\n${formatPlantList(plants)}`);
   } catch {
     await ctx.reply("Не удалось получить растения. Проверь, запущен ли backend.");
@@ -354,7 +358,7 @@ bot.command("watering", async (ctx) => {
 
 bot.command("today", async (ctx) => {
   try {
-    const plants = await getPlants();
+   const plants = await getPlants(ctx.chat?.id);
     const todayPlants = plants.filter(
       (plant) => getDaysUntilWatering(plant) === 0
     );
@@ -376,7 +380,7 @@ bot.command("today", async (ctx) => {
 
 bot.command("overdue", async (ctx) => {
   try {
-    const plants = await getPlants();
+const plants = await getPlants(ctx.chat?.id);
     const overduePlants = plants.filter(
       (plant) => getDaysUntilWatering(plant) < 0
     );
@@ -409,7 +413,7 @@ bot.command("due", async (ctx) => {
 
 bot.command("water_all", async (ctx) => {
   try {
-    const plants = await getPlants();
+   const plants = await getPlants(ctx.chat?.id);
 
     if (plants.length === 0) {
       await ctx.reply("Пока растений нет.");
@@ -468,7 +472,7 @@ bot.command("status", async (ctx) => {
   }
 
   try {
-    const plants = await getPlants();
+const plants = await getPlants(ctx.chat?.id);
 
     const overdueCount = plants.filter(
       (plant) => getDaysUntilWatering(plant) < 0
@@ -552,7 +556,7 @@ bot.action("MY_PLANTS", async (ctx) => {
   await ctx.answerCbQuery();
 
   try {
-    const plants = await getPlants();
+   const plants = await getPlants(ctx.chat?.id);
     await ctx.reply(`🌿 Твои растения:\n\n${formatPlantList(plants)}`);
   } catch {
     await ctx.reply("Не удалось получить растения. Проверь, запущен ли backend.");
@@ -613,7 +617,7 @@ bot.action("WATER_ALL", async (ctx) => {
   await ctx.answerCbQuery();
 
   try {
-    const plants = await getPlants();
+  const plants = await getPlants(ctx.chat?.id);
 
     if (plants.length === 0) {
       await ctx.reply("Пока растений нет.");
@@ -661,7 +665,7 @@ bot.action(/^WATER_PLANT_(\d+)$/, async (ctx) => {
   try {
     const response = await fetch(`${backendUrl}/plants/${plantId}/water`, {
       method: "POST",
-      headers: getBackendHeaders(),
+headers: getBackendHeaders(ctx.chat?.id),
     });
 
     if (!response.ok) {
