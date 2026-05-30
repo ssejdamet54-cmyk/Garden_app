@@ -22,6 +22,13 @@ type BotSettings = {
   reminderHour: number;
   reminderMinute: number;
 };
+type BackendUserSettings = {
+  owner_id: string;
+  reminders_enabled: boolean;
+  reminder_hour: number;
+  reminder_minute: number;
+  timezone: string;
+};
 
 const botToken = process.env.BOT_TOKEN;
 const backendUrl = process.env.BACKEND_URL || "http://localhost:4000";
@@ -110,7 +117,21 @@ async function setRemindersEnabled(enabled: boolean) {
 
   return updatedSettings;
 }
+async function getReminderUsers(): Promise<BackendUserSettings[]> {
+  const response = await fetch(`${backendUrl}/reminder-users`);
 
+  if (!response.ok) {
+    throw new Error("Failed to load reminder users");
+  }
+
+  const users = await response.json();
+
+  if (!Array.isArray(users)) {
+    return [];
+  }
+
+  return users;
+}
 function getReminderTimeText(settings: BotSettings) {
   return `${String(settings.reminderHour).padStart(2, "0")}:${String(
     settings.reminderMinute
@@ -149,7 +170,60 @@ async function getPlants(chatId?: number | string): Promise<Plant[]> {
 
   return plants;
 }
+async function getUserSettings(chatId: number | string): Promise<BackendUserSettings> {
+  const response = await fetch(`${backendUrl}/settings`, {
+    headers: getBackendHeaders(chatId),
+  });
 
+  if (!response.ok) {
+    throw new Error("Failed to load user settings");
+  }
+
+  return response.json();
+}
+async function sendDailyWateringReminderForUser(user: BackendUserSettings) {
+  const plants = await getPlants(user.owner_id);
+  const duePlants = plants.filter((plant) => {
+    const lastWatered = new Date(plant.lastWateredAt);
+    const today = new Date();
+
+    const diffTime = today.getTime() - lastWatered.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays >= plant.wateringEveryDays;
+  });
+
+  if (duePlants.length === 0) {
+    return;
+  }
+
+  const lines = [
+    "💧 Напоминание о поливе:",
+    "",
+    ...duePlants.map(
+      (plant) =>
+        `• ${plant.image} ${plant.name} — полив просрочен или нужен сегодня`
+    ),
+  ];
+
+  await bot.telegram.sendMessage(user.owner_id, lines.join("\n"));
+}
+async function saveUserSettings(
+  chatId: number | string,
+  settings: Partial<BackendUserSettings>
+): Promise<BackendUserSettings> {
+  const response = await fetch(`${backendUrl}/settings`, {
+    method: "PUT",
+    headers: getBackendHeaders(chatId),
+    body: JSON.stringify(settings),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to save user settings");
+  }
+
+  return response.json();
+}
 function getDaysUntilWatering(plant: Plant) {
   const today = new Date();
   const lastWateredAt = new Date(plant.lastWateredAt);
@@ -290,6 +364,9 @@ const plants = await getPlants();
 }
 
 bot.start(async (ctx) => {
+    if (ctx.chat?.id) {
+    await getUserSettings(ctx.chat.id);
+  }
   console.log("User chat id:", ctx.chat.id);
 
   await ctx.reply(
@@ -430,25 +507,31 @@ bot.command("water_all", async (ctx) => {
 });
 
 bot.command("settings", async (ctx) => {
-  const settings = await readBotSettings();
+  try {
+    const settings = await getUserSettings(ctx.chat.id);
 
-  await ctx.reply(
-    [
-      "⚙️ Настройки:",
-      "",
-      `⏰ Напоминание: ${getReminderTimeText(settings)}`,
-      `🔔 Статус: ${settings.remindersEnabled ? "включено" : "выключено"}`,
-      ownerChatId ? "👤 Chat ID: подключен" : "👤 Chat ID: не указан",
-      `🔗 Backend: ${backendUrl}`,
-      "",
-      "Команды:",
-      "/reminder_9 — напоминать в 09:00",
-      "/reminder_20 — напоминать в 20:00",
-      "/reminder_on — включить напоминания",
-      "/reminder_off — выключить напоминания",
-      "/reminder_test — тест напоминания",
-    ].join("\n")
-  );
+    await ctx.reply(
+      [
+        "⚙️ Твои настройки:",
+        "",
+        `🔔 Напоминания: ${
+          settings.reminders_enabled ? "включены" : "выключены"
+        }`,
+        `⏰ Время: ${String(settings.reminder_hour).padStart(2, "0")}:${String(
+          settings.reminder_minute
+        ).padStart(2, "0")}`,
+        `🌍 Часовой пояс: ${settings.timezone}`,
+        "",
+        "Команды:",
+        "/reminders_on — включить напоминания",
+        "/reminders_off — выключить напоминания",
+        "/reminder_9 — напоминать в 09:00",
+        "/reminder_20 — напоминать в 20:00",
+      ].join("\n")
+    );
+  } catch {
+    await ctx.reply("Не удалось получить настройки. Проверь backend.");
+  }
 });
 
 bot.command("status", async (ctx) => {
@@ -550,6 +633,67 @@ bot.command("reminder_off", async (ctx) => {
 bot.command("reminder_test", async (ctx) => {
   await sendDailyWateringReminder();
   await ctx.reply("Тест напоминания запущен. Проверь, пришло ли сообщение.");
+});
+bot.command("reminders_on", async (ctx) => {
+  try {
+    const currentSettings = await getUserSettings(ctx.chat.id);
+
+    await saveUserSettings(ctx.chat.id, {
+      ...currentSettings,
+      reminders_enabled: true,
+    });
+
+    await ctx.reply("🔔 Напоминания включены.");
+  } catch {
+    await ctx.reply("Не удалось включить напоминания.");
+  }
+});
+
+bot.command("reminders_off", async (ctx) => {
+  try {
+    const currentSettings = await getUserSettings(ctx.chat.id);
+
+    await saveUserSettings(ctx.chat.id, {
+      ...currentSettings,
+      reminders_enabled: false,
+    });
+
+    await ctx.reply("🔕 Напоминания выключены.");
+  } catch {
+    await ctx.reply("Не удалось выключить напоминания.");
+  }
+});
+
+bot.command("reminder_9", async (ctx) => {
+  try {
+    const currentSettings = await getUserSettings(ctx.chat.id);
+
+    await saveUserSettings(ctx.chat.id, {
+      ...currentSettings,
+      reminder_hour: 9,
+      reminder_minute: 0,
+    });
+
+    await ctx.reply("⏰ Время напоминаний установлено: 09:00.");
+  } catch {
+    await ctx.reply("Не удалось изменить время напоминания.");
+  }
+});
+
+bot.command("reminder_20", async (ctx) => {
+  try {
+    const currentSettings = await getUserSettings(ctx.chat.id);
+
+    await saveUserSettings(ctx.chat.id, {
+      ...currentSettings,
+      reminder_hour: 20,
+      reminder_minute: 0,
+    });
+
+    await ctx.reply("⏰ Время напоминаний установлено: 20:00.");
+  } catch {
+    await ctx.reply("Не удалось изменить время напоминания.");
+  }
 });
 
 bot.action("MY_PLANTS", async (ctx) => {
@@ -682,34 +826,39 @@ headers: getBackendHeaders(ctx.chat?.id),
 
 let lastReminderDate = "";
 
+const sentReminderKeys = new Set<string>();
+
 cron.schedule("* * * * *", async () => {
-  const settings = await readBotSettings();
+  try {
+    const users = await getReminderUsers();
+    const now = new Date();
 
-  if (!settings.remindersEnabled) {
-    return;
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const todayKey = now.toISOString().slice(0, 10);
+
+    for (const user of users) {
+      if (
+        user.reminder_hour !== currentHour ||
+        user.reminder_minute !== currentMinute
+      ) {
+        continue;
+      }
+
+      const reminderKey = `${user.owner_id}_${todayKey}_${user.reminder_hour}_${user.reminder_minute}`;
+
+      if (sentReminderKeys.has(reminderKey)) {
+        continue;
+      }
+
+      sentReminderKeys.add(reminderKey);
+
+      await sendDailyWateringReminderForUser(user);
+    }
+  } catch (error) {
+    console.error("Reminder cron error:", error);
   }
-
-  const now = new Date();
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
-  const todayKey = now.toISOString().slice(0, 10);
-
-  const isReminderTime =
-    currentHour === settings.reminderHour &&
-    currentMinute === settings.reminderMinute;
-
-  if (!isReminderTime) {
-    return;
-  }
-
-  if (lastReminderDate === todayKey) {
-    return;
-  }
-
-  lastReminderDate = todayKey;
-  await sendDailyWateringReminder();
 });
-
 bot.telegram.setMyCommands([
   {
     command: "start",

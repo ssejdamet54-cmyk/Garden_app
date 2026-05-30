@@ -396,3 +396,22 @@ app.post("/plants/:id/water", async (request, response) => {
 app.listen(port, () => {
   console.log(`Garden backend is running on http://localhost:${port}`);
 });
+app.get("/reminder-users", async (_request, response) => {
+  const { data, error } = await supabase
+    .from("user_settings")
+    .select("*")
+    .eq("reminders_enabled", true);
+
+  if (error) {
+    console.error("Get reminder users error:", error);
+
+    response.status(500).json({
+      message: "Не удалось получить пользователей для напоминаний",
+      error: error.message,
+    });
+
+    return;
+  }
+
+  response.json(data || []);
+});
