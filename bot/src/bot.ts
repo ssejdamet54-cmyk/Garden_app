@@ -28,6 +28,9 @@ const backendUrl = process.env.BACKEND_URL || "http://localhost:4000";
 const miniAppUrl =
   process.env.MINI_APP_URL || "https://garden-mini-app.vercel.app/";
 const ownerChatId = process.env.OWNER_CHAT_ID;
+function getOwnerId() {
+  return ownerChatId || "default";
+}
 
 if (!botToken) {
   throw new Error("BOT_TOKEN не указан в .env");
@@ -118,9 +121,17 @@ async function checkBackendHealth() {
     return false;
   }
 }
-
+function getBackendHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "x-owner-id": getOwnerId(),
+  };
+}
 async function getPlants(): Promise<Plant[]> {
-  const response = await fetch(`${backendUrl}/plants`);
+  const response = await 
+  fetch(`${backendUrl}/plants`, {
+    headers: getBackendHeaders(),
+  });
 
   if (!response.ok) {
     throw new Error("Failed to load plants");
@@ -650,6 +661,7 @@ bot.action(/^WATER_PLANT_(\d+)$/, async (ctx) => {
   try {
     const response = await fetch(`${backendUrl}/plants/${plantId}/water`, {
       method: "POST",
+      headers: getBackendHeaders(),
     });
 
     if (!response.ok) {
