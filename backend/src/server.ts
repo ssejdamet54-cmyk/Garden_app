@@ -112,7 +112,106 @@ app.get("/health", async (_request, response) => {
     database: "connected",
   });
 });
+type UserSettings = {
+  owner_id: string;
+  reminders_enabled: boolean;
+  reminder_hour: number;
+  reminder_minute: number;
+  timezone: string;
+};
 
+app.get("/settings", async (request, response) => {
+  const ownerId = getOwnerId(request);
+
+  const { data, error } = await supabase
+    .from("user_settings")
+    .select("*")
+    .eq("owner_id", ownerId)
+    .maybeSingle();
+
+  if (error) {
+    console.error("Get settings error:", error);
+
+    response.status(500).json({
+      message: "Не удалось получить настройки",
+      error: error.message,
+    });
+
+    return;
+  }
+
+  if (!data) {
+    const defaultSettings = {
+      owner_id: ownerId,
+      reminders_enabled: true,
+      reminder_hour: 9,
+      reminder_minute: 0,
+      timezone: "Europe/Moscow",
+    };
+
+    const { data: createdSettings, error: createError } = await supabase
+      .from("user_settings")
+      .insert(defaultSettings)
+      .select()
+      .single();
+
+    if (createError) {
+      console.error("Create default settings error:", createError);
+
+      response.status(500).json({
+        message: "Не удалось создать настройки",
+        error: createError.message,
+      });
+
+      return;
+    }
+
+    response.json(createdSettings);
+    return;
+  }
+
+  response.json(data);
+});
+
+app.put("/settings", async (request, response) => {
+  const ownerId = getOwnerId(request);
+  const body = request.body as Partial<UserSettings>;
+
+  const settings = {
+    owner_id: ownerId,
+    reminders_enabled:
+      typeof body.reminders_enabled === "boolean"
+        ? body.reminders_enabled
+        : true,
+    reminder_hour:
+      typeof body.reminder_hour === "number" ? body.reminder_hour : 9,
+    reminder_minute:
+      typeof body.reminder_minute === "number" ? body.reminder_minute : 0,
+    timezone: body.timezone || "Europe/Moscow",
+    updated_at: new Date().toISOString(),
+  };
+
+  const { data, error } = await supabase
+    .from("user_settings")
+    .upsert(settings, {
+      onConflict: "owner_id",
+    })
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Update settings error:", error);
+
+    response.status(500).json({
+      message: "Не удалось сохранить настройки",
+      error: error.message,
+    });
+
+    return;
+  }
+
+  response.json(data);
+});
 app.get("/plants", async (request, response) => {
   const ownerId = getOwnerId(request);
   const { data, error } = await supabase
@@ -257,7 +356,7 @@ app.post("/plants/:id/water", async (request, response) => {
   .eq("id", plantId)
   .eq("owner_id", ownerId)
   .single();
-  
+
   if (findError || !existingPlant) {
     response.status(404).json({
       message: "Растение не найдено",

@@ -69,19 +69,37 @@ type PlantPreset = {
 const API_URL =
   import.meta.env.VITE_API_URL || "https://garden-backend1.onrender.com";
 
-function getTelegramOwnerId() {
+function getBrowserOwnerId() {
+  const storageKey = "garden_browser_owner_id";
+  const existingOwnerId = localStorage.getItem(storageKey);
+
+  if (existingOwnerId) {
+    return existingOwnerId;
+  }
+
+  const newOwnerId =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? `browser_${crypto.randomUUID()}`
+      : `browser_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+
+  localStorage.setItem(storageKey, newOwnerId);
+
+  return newOwnerId;
+}
+
+function getOwnerId() {
   const telegramUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
 
   if (telegramUserId) {
     return String(telegramUserId);
   }
 
-  return import.meta.env.VITE_OWNER_ID || "default";
+  return getBrowserOwnerId();
 }
 
 function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
   const headers = new Headers(options.headers);
-  const ownerId = getTelegramOwnerId();
+  const ownerId = getOwnerId();
 
   headers.set("x-owner-id", ownerId);
 
@@ -1134,9 +1152,6 @@ async function markAsWatered(plantId: number) {
     {syncMessage}
   </div>
 )}
-<div className="sync-status">
-  Владелец данных: {getTelegramOwnerId()}
-</div>
 
 {canSyncLocalPlants && (
   <button
