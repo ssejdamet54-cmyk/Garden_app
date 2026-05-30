@@ -86,7 +86,6 @@ function getBrowserOwnerId() {
 
   return newOwnerId;
 }
-
 function getOwnerId() {
   const telegramUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
 
@@ -96,7 +95,6 @@ function getOwnerId() {
 
   return getBrowserOwnerId();
 }
-
 function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
   const headers = new Headers(options.headers);
   const ownerId = getOwnerId();
