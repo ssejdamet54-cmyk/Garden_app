@@ -49,7 +49,24 @@ type PlantPreset = {
   notes: string;
 };
 const API_URL =
-  import.meta.env.VITE_API_URL || "https://garden-backend-ekq8.onrender.com";
+  import.meta.env.VITE_API_URL || "https://garden-backend1.onrender.com";
+
+const OWNER_ID = import.meta.env.VITE_OWNER_ID || "default";
+
+function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
+  const headers = new Headers(options.headers);
+
+  headers.set("x-owner-id", OWNER_ID);
+
+  if (options.body && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
+  return fetch(`${API_URL}${path}`, {
+    ...options,
+    headers,
+  });
+}
 const initialPlants: Plant[] = [
   {
     id: 1,
@@ -513,7 +530,7 @@ const [isWeatherLoading, setIsWeatherLoading] = useState(false);
     setSyncMessage("");
 
     try {
-      const response = await fetch(`${API_URL}/plants`);
+      const response = await apiFetch(`/plants`);
 
       if (!response.ok) {
         throw new Error("Failed to load plants");
@@ -795,7 +812,7 @@ async function syncLocalPlantsToBackend() {
     const createdPlants: Plant[] = [];
 
     for (const plant of localPlants) {
-      const response = await fetch(`${API_URL}/plants`, {
+      const response = await apiFetch(`/plants`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -848,7 +865,7 @@ async function syncLocalPlantsToBackend() {
 
   if (editingPlantId) {
   try {
-    const response = await fetch(`${API_URL}/plants/${editingPlantId}`, {
+    const response = await apiFetch(`/plants/${editingPlantId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -889,7 +906,7 @@ async function syncLocalPlantsToBackend() {
   };
 
   try {
-    const response = await fetch(`${API_URL}/plants`, {
+    const response = await apiFetch(`/plants`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -922,7 +939,7 @@ async function deletePlant(plantId: number) {
   }
 
   try {
-    const response = await fetch(`${API_URL}/plants/${plantId}`, {
+    const response = await apiFetch(`/plants/${plantId}`, {
       method: "DELETE",
     });
 
@@ -1021,7 +1038,7 @@ function getWeatherWateringAdvice(plant: Plant) {
 }
 async function markAsWatered(plantId: number) {
   try {
-    const response = await fetch(`${API_URL}/plants/${plantId}/water`, {
+    const response = await apiFetch(`/plants/${plantId}/water`, {
       method: "POST",
     });
 
