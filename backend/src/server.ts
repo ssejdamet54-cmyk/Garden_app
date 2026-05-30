@@ -37,6 +37,17 @@ type DbPlant = {
 
 const app = express();
 const port = Number(process.env.PORT || 4000);
+const defaultOwnerId = process.env.OWNER_ID || "default";
+
+function getOwnerId(request: express.Request) {
+  const ownerId = request.header("x-owner-id");
+
+  if (ownerId && ownerId.trim().length > 0) {
+    return ownerId;
+  }
+
+  return defaultOwnerId;
+}
 
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
@@ -59,9 +70,10 @@ function toApiPlant(plant: DbPlant): Plant {
   };
 }
 
-function toDbPlant(plant: Partial<Plant>) {
+function toDbPlant(plant: Partial<Plant>, ownerId: string) {
   return {
     id: Number(plant.id || Date.now()),
+    owner_id: ownerId,
     name: plant.name || "Новое растение",
     type: plant.type || "Новое растение",
     place: plant.place || "Дом",
@@ -101,12 +113,14 @@ app.get("/health", async (_request, response) => {
   });
 });
 
-app.get("/plants", async (_request, response) => {
+app.get("/plants", async (request, response) => {
+  const ownerId = getOwnerId(request);
   const { data, error } = await supabase
     .from("plants")
     .select(
       "id,name,type,place,room,image,photo,watering_every_days,last_watered_at,watering_history,notes"
     )
+    .eq("owner_id", ownerId)
     .order("id", { ascending: false });
 
   if (error) {
@@ -124,7 +138,8 @@ app.get("/plants", async (_request, response) => {
 });
 
 app.post("/plants", async (request, response) => {
-  const dbPlant = toDbPlant(request.body as Partial<Plant>);
+  const ownerId = getOwnerId(request);
+  const dbPlant = toDbPlant(request.body as Partial<Plant>, ownerId);
 
   const { data, error } = await supabase
     .from("plants")
@@ -148,13 +163,13 @@ app.post("/plants", async (request, response) => {
 
 app.put("/plants/:id", async (request, response) => {
   const plantId = Number(request.params.id);
-
-  const { data: existingPlant, error: findError } = await supabase
-    .from("plants")
-    .select("*")
-    .eq("id", plantId)
-    .single();
-
+const ownerId = getOwnerId(request);
+const { data: existingPlant, error: findError } = await supabase
+  .from("plants")
+  .select("*")
+  .eq("id", plantId)
+  .eq("owner_id", ownerId)
+  .single();
   if (findError || !existingPlant) {
     response.status(404).json({
       message: "Растение не найдено",
@@ -186,7 +201,8 @@ app.put("/plants/:id", async (request, response) => {
       notes: updatedPlant.notes,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", plantId)
+  .eq("id", plantId)
+.eq("owner_id", ownerId)
     .select()
     .single();
 
@@ -206,8 +222,13 @@ app.put("/plants/:id", async (request, response) => {
 
 app.delete("/plants/:id", async (request, response) => {
   const plantId = Number(request.params.id);
+  const ownerId = getOwnerId(request);
 
-  const { error } = await supabase.from("plants").delete().eq("id", plantId);
+ const { error } = await supabase
+  .from("plants")
+  .delete()
+  .eq("id", plantId)
+  .eq("owner_id", ownerId);
 
   if (error) {
     console.error("Delete plant error:", error);
@@ -227,14 +248,16 @@ app.delete("/plants/:id", async (request, response) => {
 
 app.post("/plants/:id/water", async (request, response) => {
   const plantId = Number(request.params.id);
+  const ownerId = getOwnerId(request);
   const today = new Date().toISOString().slice(0, 10);
 
   const { data: existingPlant, error: findError } = await supabase
-    .from("plants")
-    .select("*")
-    .eq("id", plantId)
-    .single();
-
+  .from("plants")
+  .select("*")
+  .eq("id", plantId)
+  .eq("owner_id", ownerId)
+  .single();
+  
   if (findError || !existingPlant) {
     response.status(404).json({
       message: "Растение не найдено",
@@ -253,7 +276,7 @@ app.post("/plants/:id/water", async (request, response) => {
       watering_history: updatedHistory,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", plantId)
+   .eq("id", plantId)
     .select()
     .single();
 
