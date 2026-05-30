@@ -1,5 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp?: {
+        ready: () => void;
+        expand: () => void;
+        initDataUnsafe?: {
+          user?: {
+            id?: number;
+            first_name?: string;
+            last_name?: string;
+            username?: string;
+          };
+        };
+      };
+    };
+  }
+}
 
 type PlantPlace = "Дом" | "Балкон" | "Улица" | "Теплица";
 type PlantCategory = "Все" | PlantPlace;
@@ -51,12 +69,21 @@ type PlantPreset = {
 const API_URL =
   import.meta.env.VITE_API_URL || "https://garden-backend1.onrender.com";
 
-const OWNER_ID = import.meta.env.VITE_OWNER_ID || "default";
+function getTelegramOwnerId() {
+  const telegramUserId = window.Telegram?.WebApp?.initDataUnsafe?.user?.id;
+
+  if (telegramUserId) {
+    return String(telegramUserId);
+  }
+
+  return import.meta.env.VITE_OWNER_ID || "default";
+}
 
 function apiFetch(path: string, options: RequestInit = {}): Promise<Response> {
   const headers = new Headers(options.headers);
+  const ownerId = getTelegramOwnerId();
 
-  headers.set("x-owner-id", OWNER_ID);
+  headers.set("x-owner-id", ownerId);
 
   if (options.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
@@ -523,7 +550,12 @@ const [weatherError, setWeatherError] = useState("");
 const [isWeatherLoading, setIsWeatherLoading] = useState(false);
 
   const plantIcons = ["🌱", "🪴", "🌿", "🌵", "🍅", "🥒", "🥕", "🍓", "🌳", "🌸"];
-
+useEffect(() => {
+  if (window.Telegram?.WebApp) {
+    window.Telegram.WebApp.ready();
+    window.Telegram.WebApp.expand();
+  }
+}, []);
  useEffect(() => {
   async function loadPlantsFromBackend() {
     setIsPlantsLoading(true);
@@ -1102,6 +1134,9 @@ async function markAsWatered(plantId: number) {
     {syncMessage}
   </div>
 )}
+<div className="sync-status">
+  Владелец данных: {getTelegramOwnerId()}
+</div>
 
 {canSyncLocalPlants && (
   <button
